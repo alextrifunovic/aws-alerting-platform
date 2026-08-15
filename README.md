@@ -1,4 +1,4 @@
-# alerting-platform
+# aws-alerting-platform
 
 Serverless incident alerting & escalation platform on AWS.
 
