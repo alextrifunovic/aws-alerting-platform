@@ -14,3 +14,14 @@ provider "aws" {
 module "dynamodb" {
   source = "../../modules/dynamodb"
 }
+
+module "iam" {
+  source               = "../../modules/iam"
+  incidents_table_arn  = module.dynamodb.incidents_table_arn
+}
+
+module "lambda_ingestion" {
+  source                = "../../modules/lambda_ingestion"
+  ingestion_role_arn    = module.iam.ingestion_role_arn
+  incidents_table_name  = module.dynamodb.incidents_table_name
+}
