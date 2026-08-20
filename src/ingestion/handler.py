@@ -18,6 +18,14 @@ def handler(event, context):
     except json.JSONDecodeError:
         return _response(400, {"error": "Invalid JSON body"})
 
+    options = {"type", "location", "severity", "description"}
+
+    keyset = body.keys()
+
+    for key in keyset:
+        if key not in options:
+            return _response(400, {"error": f"{key} is invalid"})
+
     incident_type = body.get("type")
     location = body.get("location")
     severity = body.get("severity")
