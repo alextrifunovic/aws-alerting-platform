@@ -25,3 +25,9 @@ module "lambda_ingestion" {
   ingestion_role_arn    = module.iam.ingestion_role_arn
   incidents_table_name  = module.dynamodb.incidents_table_name
 }
+
+module "lambda_usgs_poller" {
+  source = "../../modules/lambda_usgs_poller"
+  usgs_poller_lambda_role_arn = module.iam.usgs_poller_lambda_role_arn
+  incidents_table_name = module.dynamodb.incidents_table_name
+}
