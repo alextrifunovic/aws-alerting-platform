@@ -21,6 +21,11 @@ resource "aws_iam_role" "ingestion_lambda" {
   assume_role_policy = data.aws_iam_policy_document.lambda_assume_role.json
 }
 
+resource "aws_iam_role" "targeting_lambda" {
+  name = "targeting-lambda-role"
+  assume_role_policy = data.aws_iam_policy_document.lambda_assume_role.json
+}
+
 resource "aws_iam_role_policy_attachment" "ingestion_lambda_basic_logs" {
   role       = aws_iam_role.ingestion_lambda.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
@@ -29,6 +34,11 @@ resource "aws_iam_role_policy_attachment" "ingestion_lambda_basic_logs" {
 resource "aws_iam_role_policy_attachment" "usgs_poller_lambda_basic_logs" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
   role       = aws_iam_role.usgs_poller_lambda.name
+}
+
+resource "aws_iam_role_policy_attachment" "targeting_lambda_basic_logs" {
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+  role       = aws_iam_role.targeting_lambda.name
 }
 
 data "aws_iam_policy_document" "ingestion_lambda_dynamodb" {
@@ -52,6 +62,20 @@ data "aws_iam_policy_document" "usgs_poller_lambda_dynamodb" {
   }
 }
 
+data "aws_iam_policy_document" "targeting_lambda_dynamodb" {
+  statement {
+    effect = "Allow"
+    actions = ["dynamodb:GetItem"]
+    resources = [var.incidents_table_arn]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = ["dynamodb:Query"]
+    resources = [var.users_table_arn]
+  }
+}
+
 resource "aws_iam_role_policy" "ingestion_lambda_dynamodb" {
   name   = "ingestion-lambda-dynamodb-write"
   role   = aws_iam_role.ingestion_lambda.id
@@ -62,4 +86,10 @@ resource "aws_iam_role_policy" "usgs_poller_dynamodb" {
   name = "usgs-poller-lambda-dynamodb-read-write"
   policy = data.aws_iam_policy_document.usgs_poller_lambda_dynamodb.json
   role   = aws_iam_role.usgs_poller_lambda.id
+}
+
+resource "aws_iam_role_policy" "targeting_lambda_dynamodb" {
+  name = "targeting-lambda-read-query"
+  policy = data.aws_iam_policy_document.targeting_lambda_dynamodb.json
+  role = aws_iam_role.targeting_lambda.id
 }

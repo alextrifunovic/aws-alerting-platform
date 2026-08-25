@@ -15,7 +15,7 @@ dynamodb = boto3.resource("dynamodb")
 table = dynamodb.Table(os.environ["INCIDENTS_TABLE_NAME"])
 
 USGS_URL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson"
-MIN_MAGNITUDE = 1.7
+MIN_MAGNITUDE = 4.5
 REQUEST_TIMEOUT_SECONDS = 5
 
 

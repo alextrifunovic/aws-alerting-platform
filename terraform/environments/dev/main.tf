@@ -18,6 +18,7 @@ module "dynamodb" {
 module "iam" {
   source               = "../../modules/iam"
   incidents_table_arn  = module.dynamodb.incidents_table_arn
+  users_table_arn = module.dynamodb.users_table_arn
 }
 
 module "lambda_ingestion" {
