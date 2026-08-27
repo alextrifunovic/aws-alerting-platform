@@ -32,3 +32,10 @@ module "lambda_usgs_poller" {
   usgs_poller_lambda_role_arn = module.iam.usgs_poller_lambda_role_arn
   incidents_table_name = module.dynamodb.incidents_table_name
 }
+
+module "targeting" {
+  source = "../../modules/targeting"
+  targeting_lambda_role_arn = module.iam.targeting_lambda_arn
+  incidents_table_name = module.dynamodb.incidents_table_name
+  users_table_name = module.dynamodb.users_table_name
+}
